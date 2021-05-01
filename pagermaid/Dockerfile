@@ -36,6 +36,10 @@ RUN source ~/.bashrc \
         figlet \
         libmagic1 \
         libzbar0 \
+    ## 安装s6
+    && curl -L -o /tmp/s6-overlay-installer https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}-installer \
+    && chmod +x /tmp/s6-overlay-installer \
+    && /tmp/s6-overlay-installer / \
     ## 安装编译依赖
     && apt-get update \
     && apt-get install --no-install-recommends -y \
