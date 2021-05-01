@@ -1,29 +1,29 @@
 FROM ubuntu:hirsute
 ARG DEBIAN_FRONTEND=noninteractive
+ARG USER_NAME=pagermaid
+ARG WORK_DIR=/pagermaid/workdir
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     SHELL=/bin/bash \
     LANG=zh_CN.UTF-8 \
-    PS1="\u@\h:\w \$ " \
-    PAGERMAID_DIR=/pagermaid
+    PS1="\u@\h:\w \$ "
 SHELL ["/bin/bash", "-c"]
-COPY pagermaid/docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
-WORKDIR $PAGERMAID_DIR
+WORKDIR $WORK_DIR
 RUN source ~/.bashrc \
-#   自编译建议修改为国内镜像源
+    ## 安装运行环境依赖，自编译建议修改为国内镜像源
 #   && sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
 #   && sed -i 's/security.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
 #   && sed -i 's/ports.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
-    && echo "**** install runtime dependencies ****" \
     && apt-get update \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
-        ## 这是正常运行pagermaid需要用到的包
         python3 \
         python3-pip \
         tesseract-ocr \
         tesseract-ocr-eng \
         tesseract-ocr-chi-sim \
         language-pack-zh-hans \
+        sudo \
+        s6 \
         git \
         openssl \
         redis-server \
@@ -36,7 +36,7 @@ RUN source ~/.bashrc \
         figlet \
         libmagic1 \
         libzbar0 \
-    && echo "**** install build dependencies ****" \
+    ## 安装编译依赖
     && apt-get update \
     && apt-get install --no-install-recommends -y \
         ## 这是跨平台交叉编译要用到的包，如果自行构建，有可能不需要
@@ -62,23 +62,27 @@ RUN source ~/.bashrc \
         libfribidi-dev \
         libxcb1-dev \
         pkg-config \
-    && echo "**** setting timezone ****" \
+    ## 设置时区
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
-    && echo "**** git clone ****" \
-    && git clone -b master https://github.com/Xtao-Labs/PagerMaid-Modify.git $PAGERMAID_DIR \
-    && git config --global pull.ff only \
-    && chmod 777 /usr/bin/docker-entrypoint.sh \
-    && echo "**** pip install ****" \
+    ## python软链接
     && ln -sf /usr/bin/python3 /usr/bin/python \
-#   自编译建议修改为国内pypi源
+    ## 升级pip
 #   && pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
     && python -m pip install --upgrade pip \
-    && pip install eyed3 pycryptodome \
+    ## 添加用户
+    && useradd $USER_NAME -u 917 -U -r -m -d /$USER_NAME -s /bin/bash \
+    && usermod -aG sudo,users $USER_NAME \
+    && echo "$USER_NAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER_NAME \
+    ## 克隆仓库
+    && git clone -b master https://github.com/nevinen/PagerMaid-Modify.git $WORK_DIR \
+    && git config --global pull.ff only \
+    ## 复制s6
+    && cp s6/ / \
+    ## pip install
     && pip install -r requirements.txt \
-    && echo "**** clean up ****" \
-    && apt-get purge --auto-remove -y \
-        ## 将跨平台交叉编译要用到的包完全卸载掉
+    ## 卸载编译依赖，清理安装缓存
+    && sudo apt-get purge --auto-remove -y \
         build-essential \
         python3-dev \
         libxslt1-dev \
@@ -107,9 +111,10 @@ RUN source ~/.bashrc \
         /tmp/* \
         /var/lib/apt/lists/* \
         /var/tmp/* \
-        /root/.cache \
+        ~/.cache \
+    ## 最后改成国内源
     && sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
     && sed -i 's/security.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
     && sed -i 's/ports.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
     && pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/init"]
