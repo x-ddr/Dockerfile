@@ -48,8 +48,7 @@ jobs:
             --tag "${DOCKERHUB_REPOSITORY}:latest-amd64" \
             -f pagermaid/Dockerfile \
             .                                                             
-          IMAGES+=( "${DOCKERHUB_REPOSITORY}:${RELEASE_SEMVER}-amd64" )
-
+          
           echo "Build arm64-v8"
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
@@ -61,8 +60,7 @@ jobs:
             --tag "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" \
             -f pagermaid/Dockerfile \
             .
-          IMAGES+=( "${DOCKERHUB_REPOSITORY}:${RELEASE_SEMVER}-arm64-v8" )
-
+          
           echo "Create manifest lists"
           docker manifest create "${DOCKERHUB_REPOSITORY}:latest" "${IMAGES[@]}"
 
