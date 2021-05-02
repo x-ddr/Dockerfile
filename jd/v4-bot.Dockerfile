@@ -1,5 +1,6 @@
 FROM nevinee/jd:v4
 RUN apk add --no-cache -f \
+        jq \
         python3 \
         zlib-dev \
         jpeg-dev \
