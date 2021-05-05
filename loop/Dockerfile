@@ -1,10 +1,7 @@
-FROM alpine:latest AS builder
+FROM rust:latest AS builder
 
 WORKDIR /loop
-RUN apk update -f \
-    && apk upgrade \
-    && apk --no-cache add -f git build-base cargo \
-    && git clone https://github.com/Miserlou/Loop.git /loop \
+RUN git clone https://github.com/Miserlou/Loop.git /loop \
     && cargo build --release
 
 FROM alpine:latest
