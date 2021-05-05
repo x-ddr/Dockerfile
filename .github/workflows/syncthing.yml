@@ -15,7 +15,7 @@ jobs:
           publish: true
           imageName: nevinee/syncthing
           dockerFile: syncthing/Dockerfile
-          platform: linux/amd64,linux/arm64,linux/arm/v7
+          platform: linux/amd64,linux/arm64/v8,linux/arm/v7
           tag: latest,v1.16.0
           dockerUser: ${{ secrets.DOCKER_USERNAME }}
           dockerPassword: ${{ secrets.DOCKER_PASSWORD }}

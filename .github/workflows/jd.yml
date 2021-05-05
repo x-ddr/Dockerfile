@@ -36,7 +36,7 @@ jobs:
           push: true
           context: jd
           file: jd/v4.Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           tags: nevinee/jd:v4
           build-args: |
             JD_SHELL_KEY=${{ secrets.JD_SHELL_KEY }}
@@ -50,5 +50,5 @@ jobs:
           push: true
           context: jd
           file: jd/v4-bot.Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           tags: nevinee/jd:v4-bot
