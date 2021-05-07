@@ -1,4 +1,31 @@
+FROM alpine:latest AS builder
+WORKDIR /phantomjs
+RUN apk add --no-cache -f \
+        build-base \
+        flex-dev \
+        freetype-dev \
+        sqlite-dev \
+        openssl-dev \
+        libpng-dev \
+        libjpeg-turbo-dev \
+        libx11-dev \
+        libxext-dev \
+        bison \
+        git \
+        gperf \
+        ruby \
+        perl \
+        python3 \
+        fontconfig \
+        icu-libs \
+    && git clone git://github.com/ariya/phantomjs.git /phantomjs
+    && git checkout 2.1.1 \
+    && git submodule init \
+    && git submodule update \
+    && python3 build.py
+
 FROM nevinee/jd:v4-unstable
+COPY --from=builder /phantomjs/bin/phantomjs /usr/local/bin
 RUN echo "========= 安装必要软件 =========" \
     && apk add --no-cache -f \
         jq \
@@ -13,6 +40,7 @@ RUN echo "========= 安装必要软件 =========" \
         musl-dev \
     && echo "========= 创建软链接 =========" \
     && ln -sf /usr/bin/python3 /usr/bin/python \
+    && chmod +x /usr/local/bin/phantomjs \
     && echo "========= 运行 pip install =========" \
     && pip3 install --upgrade pip \
     && cd $JD_DIR/jbot \
