@@ -22,7 +22,7 @@ RUN apk add --no-cache -f \
     && git checkout 2.1.1 \
     && git submodule init \
     && git submodule update \
-    && python3 build.py
+    && python3 build.py -c
 
 FROM nevinee/jd:v4-unstable
 COPY --from=builder /phantomjs/bin/phantomjs /usr/local/bin
