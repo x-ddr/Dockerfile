@@ -35,6 +35,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        perl \
        openssh-client \
        parallel \
+       nodejs-lts \
+       npm \
     && echo "========= 修改时区 =========" \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
