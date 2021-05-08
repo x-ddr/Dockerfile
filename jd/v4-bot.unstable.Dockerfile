@@ -8,8 +8,10 @@ RUN apk add --no-cache -f \
         openssl-dev \
         libpng-dev \
         libjpeg-turbo-dev \
+        libjpeg \
         libx11-dev \
         libxext-dev \
+        icu-dev \
         bison \
         git \
         gperf \
@@ -17,12 +19,18 @@ RUN apk add --no-cache -f \
         perl \
         python3 \
         fontconfig \
-        icu-libs \
+        linux-headers \
     && git clone git://github.com/ariya/phantomjs.git /phantomjs
     && git checkout 2.1.1 \
     && git submodule init \
     && git submodule update \
-    && python3 build.py -c
+    && python3 build.py \
+        --confirm \
+        --silent \
+        --release \
+        --qt-config="-system-libjpeg" \
+        --git-clean-qtbase \
+        --git-clean-qtwebkit
 
 FROM nevinee/jd:v4-unstable
 COPY --from=builder /phantomjs/bin/phantomjs /usr/local/bin
