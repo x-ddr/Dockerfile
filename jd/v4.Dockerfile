@@ -50,6 +50,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && chmod 644 /root/.ssh/config \
     && ssh-keyscan $REPO_URL > /root/.ssh/known_hosts \
     && echo "========= 克隆SHELL程序 =========" \
+    && git config --global pull.ff only \
     && git clone -b $JD_SHELL_BRANCH $JD_SHELL_URL $JD_DIR \
     && echo "========= 安装PM2 =========" \
     && npm install -g pm2 \
