@@ -38,6 +38,7 @@ RUN echo "========= 安装必要软件 =========" \
     && apk add --no-cache -f \
         jq \
         python3 \
+        py3-pip \
         zlib-dev \
         jpeg-dev \
         freetype-dev \
