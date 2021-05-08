@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM alpine:latest
 ARG REPO=gitee
 ARG REPO_URL=$REPO.com
 ARG JD_SHELL=jd_shell
