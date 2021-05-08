@@ -49,7 +49,7 @@ RUN echo "========= 安装必要软件 =========" \
         musl-dev \
     && echo "========= 创建软链接 =========" \
     && ln -sf /usr/bin/python3 /usr/bin/python \
-    && chmod +x /usr/local/bin/phantomjs \
+#   && chmod +x /usr/local/bin/phantomjs \
     && echo "========= 运行 pip install =========" \
     && pip3 install --upgrade pip \
     && cd $JD_DIR/jbot \
