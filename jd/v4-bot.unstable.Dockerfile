@@ -1,17 +1,17 @@
 FROM nevinee/jd:v4-unstable
 RUN echo "========= 安装必要软件 =========" \
     && apk add --no-cache -f \
-        jq \
-        python3 \
-        py3-pip \
-        zlib-dev \
-        jpeg-dev \
-        freetype-dev \
+       jq \
+       python3 \
+       py3-pip \
+       zlib-dev \
+       jpeg-dev \
+       freetype-dev \
     && echo "========= 安装编译软件 =========" \
     && apk add --no-cache --virtual .build \
-        gcc \
-        python3-dev \
-        musl-dev \
+       gcc \
+       python3-dev \
+       musl-dev \
     && echo "========= 创建软链接 =========" \
     && ln -sf /usr/bin/python3 /usr/bin/python \
     && echo "========= 运行 pip install =========" \
