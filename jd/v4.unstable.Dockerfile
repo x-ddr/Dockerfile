@@ -2,7 +2,7 @@ FROM alpine:latest
 ARG REPO=gitee
 ARG REPO_URL=$REPO.com
 ARG JD_SHELL=jd_shell
-ARG JD_SHELL_BRANCH=dev
+ARG JD_SHELL_BRANCH=master
 ARG JD_SHELL_HOST=jd_shell_$REPO
 ARG JD_SHELL_KEY="NEED_REPLACE"
 ARG JD_SCRIPTS=jd_scripts
@@ -35,9 +35,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        perl \
        openssh-client \
        parallel \
-       nodejs-current \
+       nodejs-lts \
        npm \
-       yarn \
     && echo "========= 修改时区 =========" \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
@@ -65,12 +64,12 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && ln -sf $JD_DIR/jcsv.sh /usr/local/bin/jcsv \
     && if [ -d /etc/cont-init.d ]; then \
             rm -rf /etc/cont-init.d; \
-            ln -sf $JD_DIR/s6-overlay/etc/cont-init.d /etc/cont-init.d; \
        fi \
     && if [ -d /etc/services.d ]; then \
             rm -rf /etc/services.d; \
-            ln -sf $JD_DIR/s6-overlay/etc/services.d /etc/services.d; \
        fi \
+    && ln -sf $JD_DIR/s6-overlay/etc/cont-init.d /etc/cont-init.d \
+    && ln -sf $JD_DIR/s6-overlay/etc/services.d /etc/services.d \
     && echo "========= 清理 =========" \
     && rm -rf /root/.npm /var/cache/apk/*
 ENTRYPOINT ["/init"]
