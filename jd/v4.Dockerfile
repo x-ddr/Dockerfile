@@ -27,6 +27,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && apk --no-cache add -f \
        bash \
        coreutils \
+       diffutils \
        git \
        wget \
        curl \
