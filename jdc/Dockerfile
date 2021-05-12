@@ -29,6 +29,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && echo "========= 安装PM2 =========" \
+    && npm config set registry https://registry.npm.taobao.org \
     && npm install -g pm2 \
     && chmod +x /usr/local/bin/loop \
     && echo "========= 清理 =========" \
