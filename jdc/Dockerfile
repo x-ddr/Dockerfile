@@ -1,6 +1,5 @@
 FROM alpine:latest
 COPY --from=nevinee/s6-overlay-stage:latest / /
-COPY --from=nevinee/loop:latest /usr/local/bin/loop /usr/local/bin/loop
 COPY jdc/s6-overlay /
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
@@ -31,7 +30,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && echo "========= 安装PM2 =========" \
     && npm config set registry https://registry.npm.taobao.org \
     && npm install -g pm2 \
-    && chmod +x /usr/local/bin/loop \
     && echo "========= 清理 =========" \
     && rm -rf /root/.npm /var/cache/apk/*
 ENTRYPOINT ["/init"]
