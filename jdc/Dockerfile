@@ -21,6 +21,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        nano \
        tzdata \
        perl \
+       openssl \
        openssh-client \
        parallel \
        nodejs-lts \
