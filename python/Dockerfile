@@ -24,7 +24,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple \
-    && python -m pip install --upgrade pip
+    && python -m pip install --upgrade pip \
     && rm -rf \
        /tmp/* \
        /root/.cache
