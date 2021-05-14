@@ -20,7 +20,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        curl \
        nano \
        tzdata \
-    && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple \
