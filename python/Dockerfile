@@ -5,25 +5,28 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
     PS1="\u@\h:\w \$ "
-COPY python/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --from=nevinee/s6-overlay-stage:latest / /
+COPY python/s6-overlay /
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && apk update -f \
     && apk --no-cache add -f \
-        bash \
-        openssl \
-        coreutils \
-        moreutils \
-        git \
-        wget \
-        curl \
-        nano \
-        tzdata \
-        perl \
-    && rm -rf /var/cache/apk/* \
+       bash \
+       openssl \
+       coreutils \
+       moreutils \
+       parallel \
+       git \
+       wget \
+       curl \
+       nano \
+       tzdata \
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && pip config set global.index-url https://mirrors.bfsu.edu.cn/pypi/web/simple \
     && python -m pip install --upgrade pip
+    && rm -rf \
+       /tmp/* \
+       /root/.cache
 WORKDIR /root
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/init"]
