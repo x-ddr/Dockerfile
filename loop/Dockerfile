@@ -1,9 +1,10 @@
 FROM rust:latest AS builder
-
-WORKDIR /loop
-RUN git clone https://github.com/Miserlou/Loop.git /loop \
-    && cargo build --release
+ARG TARGET
+WORKDIR /usr/src
+RUN    git clone https://github.com/Miserlou/Loop.git loop \
+    && cd loop \
+    && rustup target install x86_64-unknown-linux-musl \
+    && cargo build --release --target=$TARGET
 
 FROM alpine:latest
-
-COPY --from=builder /loop/target/release/loop /usr/local/bin/loop
+COPY --from=builder /usr/src/loop/target/$TARGET/release/loop /usr/local/bin/loop
