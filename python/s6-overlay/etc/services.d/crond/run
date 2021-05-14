@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
-crond
-
 if [ -f /root/crontab.list ]; then
   crontab /root/crontab.list
 fi
+
+exec s6-setuidgid root crond -f
