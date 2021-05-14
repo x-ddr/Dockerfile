@@ -7,4 +7,5 @@ RUN    git clone https://github.com/Miserlou/Loop.git loop \
     && cargo build --release --target=$TARGET
 
 FROM alpine:latest
+ARG TARGET
 COPY --from=builder /usr/src/loop/target/$TARGET/release/loop /usr/local/bin/loop
