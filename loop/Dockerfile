@@ -3,7 +3,7 @@ ARG TARGET
 WORKDIR /usr/src
 RUN    git clone https://github.com/Miserlou/Loop.git loop \
     && cd loop \
-    && rustup target install x86_64-unknown-linux-musl \
+    && rustup target install $TARGET \
     && cargo build --release --target=$TARGET
 
 FROM alpine:latest
