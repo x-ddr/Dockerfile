@@ -10,6 +10,7 @@ ARG JD_SCRIPTS_BRANCH=master
 ARG JD_SCRIPTS_HOST=jd_scripts_$REPO
 ARG JD_SCRIPTS_KEY="NEED_REPLACE"
 COPY --from=nevinee/s6-overlay-stage:latest / /
+COPY --from=nevinee/loop:latest / /
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
@@ -27,6 +28,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && apk --no-cache add -f \
        bash \
        coreutils \
+       diffutils \
        git \
        wget \
        curl \
@@ -34,7 +36,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        tzdata \
        perl \
        openssh-client \
-       parallel \
        nodejs-lts \
        npm \
     && echo "========= 修改时区 =========" \
