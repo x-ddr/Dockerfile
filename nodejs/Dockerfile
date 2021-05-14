@@ -5,23 +5,23 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
     PS1="\u@\h:\w \$ "
-COPY nodejs/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --from=nevinee/s6-overlay-stage:latest / /
+COPY s6-overlay /
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     && apk update -f \
     && apk --no-cache add -f \
-        bash \
-        openssl \
-        coreutils \
-        moreutils \
-        git \
-        wget \
-        curl \
-        nano \
-        tzdata \
-        perl \
+       bash \
+       openssl \
+       coreutils \
+       moreutils \
+       parallel \
+       git \
+       wget \
+       curl \
+       nano \
+       tzdata \
     && rm -rf /var/cache/apk/* \
-    && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone
 WORKDIR /root
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/init"]

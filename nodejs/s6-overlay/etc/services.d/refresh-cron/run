@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+
+refresh-cron () {
+    if [ -s /root/crontab.list ] && [[ $(cat /root/crontab.list) != $(crontab -l) ]]; then
+        echo "[services.d] 检测到/root/crontab.list有变化，立即刷新定时任务..."
+        crontab /root/crontab.list
+    fi
+}
+
+export -f refresh-cron
+echo -e "\n[services.d] ======================== 启动定时任务自动刷新程序 ========================\n"
+echo -e "[services.d] 每2秒检测一次/root/crontab.list是否发生变化，如发生变化则立即刷新定时任务。\n"
+yes | parallel -N0 -j1 --delay 2s refresh-cron
