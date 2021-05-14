@@ -1,11 +1,3 @@
-FROM rust:latest AS builder
+FROM scratch
 ARG TARGET
-WORKDIR /usr/src
-RUN    git clone https://github.com/Miserlou/Loop.git loop \
-    && cd loop \
-    && rustup target install $TARGET \
-    && cargo build --release --target=$TARGET
-
-FROM alpine:latest
-ARG TARGET
-COPY --from=builder /usr/src/loop/target/$TARGET/release/loop /usr/local/bin/loop
+COPY loop/bin/$TARGET/loop /usr/local/bin/loop
