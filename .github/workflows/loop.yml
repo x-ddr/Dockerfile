@@ -6,10 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      IMAGE_NAME: loop
       DOCKER_BUILDKIT: 1
       DOCKER_CLI_EXPERIMENTAL: enabled
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/loop
+      DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Setup Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v3
+        uses: docker/setup-buildx-action@v1
 
       - name: Buildx cache
         uses: actions/cache@v2
@@ -42,7 +43,7 @@ jobs:
             --platform linux/amd64 \
             --build-arg "TARGET=x86_64-unknown-linux-musl" \
             --tag "${DOCKERHUB_REPOSITORY}:latest-amd64" \
-            -f loop/Dockerfile \
+            -f ${IMAGE_NAME}/Dockerfile \
             .                                                             
           IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-amd64" )
 
@@ -54,7 +55,7 @@ jobs:
             --platform linux/arm/v7 \
             --build-arg "TARGET=armv7-unknown-linux-musleabihf" \
             --tag "${DOCKERHUB_REPOSITORY}:latest-arm-v7" \
-            -f loop/Dockerfile \
+            -f ${IMAGE_NAME}/Dockerfile \
             .
           IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-arm-v7" )
 
@@ -66,7 +67,7 @@ jobs:
             --platform linux/arm64/v8 \
             --build-arg "TARGET=aarch64-unknown-linux-musl" \
             --tag "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" \
-            -f loop/Dockerfile \
+            -f ${IMAGE_NAME}/Dockerfile \
             .
           IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" )
 

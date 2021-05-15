@@ -6,6 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: 构建JD测试版
+    env:
+      IMAGE_NAME: jd
     steps:
       -
         name: Checkout
@@ -34,10 +36,10 @@ jobs:
         with:
           pull: true
           push: true
-          context: jd
-          file: jd/v4.unstable.Dockerfile
+          context: ${IMAGE_NAME}
+          file: ${IMAGE_NAME}/v4.unstable.Dockerfile
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          tags: nevinee/jd:v4-unstable
+          tags: ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:v4-unstable
           build-args: |
             JD_SHELL_KEY=${{ secrets.JD_SHELL_KEY }}
             JD_SCRIPTS_KEY=${{ secrets.JD_SCRIPTS_KEY }}
@@ -48,7 +50,7 @@ jobs:
         with:
           pull: false
           push: true
-          context: jd
-          file: jd/v4-bot.unstable.Dockerfile
+          context: ${IMAGE_NAME}
+          file: ${IMAGE_NAME}/v4-bot.unstable.Dockerfile
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          tags: nevinee/jd:v4-bot-unstable
+          tags: ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:v4-bot-unstable
