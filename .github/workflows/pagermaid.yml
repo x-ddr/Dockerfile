@@ -6,6 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: 构建PagerMaid
+    env:
+      IMAGE_NAME: pagermaid
     steps:
       - name: Checkout master
         uses: actions/checkout@master
@@ -13,9 +15,10 @@ jobs:
         uses: ilteoood/docker_buildx@master
         with:
           publish: true
-          imageName: nevinee/pagermaid
-          dockerFile: pagermaid/Dockerfile
+          imageName: ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}
+          dockerFile: ${IMAGE_NAME}/Dockerfile
           platform: linux/amd64,linux/arm64/v8,linux/arm/v7
           tag: latest
           dockerUser: ${{ secrets.DOCKER_USERNAME }}
           dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
+          context: ${IMAGE_NAME}

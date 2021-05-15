@@ -6,6 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: 构建Nodejs
+    env:
+      IMAGE_NAME: nodejs
     steps:
       -
         name: Checkout
@@ -34,8 +36,8 @@ jobs:
         with:
           pull: true
           push: true
-          context: nodejs
+          context: ${IMAGE_NAME}
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           tags: |
-            nevinee/nodejs:latest
-            nevinee/nodejs:lts
+            ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${IMAGE_NAME}:lts
